@@ -1,4 +1,4 @@
-# Azure OpenAI behind APIM Management Sample
+# Azure OpenAI behind API Management Sample
 This is a sample python console application that calls Azure OpenAI chat completion, but behind Azure APIM Management
 
 ## Why would I want to do this?
@@ -18,6 +18,22 @@ In this way, APIM protects the API to only have authenitcated users presenting r
 The mobile application does not contain any secrets - only the *clientid* of an Entra ID application registration . If needed, an APIM subscription key may also be used to further restrict HTTP requests against the API.
 
 ## Configuration
+
+### Entra ID
+This is the starting point, because this identity is used for:
+
+1. representing the mobile application (so part of its authentication process)
+2. used by API management to authenticate requests based on the contents of the token presented
+   
+In Azure Entra ID, an app registration needs to be created for the mobile application. This follows the [guidance](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest) for configuration for the application's authentication library - in our case MSAL.
+
+![alt text](./images/ad-app-registration.png "AD app registration")
+
+The summary contains the client ID that will be both used in the mobile application and the APIM *validate_jwt* policy.
+
+![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
+
+
 ### API Management
 
 ![alt text](./images/apim-summary.png "APIM Summary")
@@ -55,15 +71,7 @@ The mobile application does not contain any secrets - only the *clientid* of an 
 
 ![alt text](./images/openai-role-assignment.png "Role assignment")
 
-### Entra ID
 
-In Azure Entra ID, an app registration needs to be created for the mobile application. This follows the [guidance](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest) for configuration for the application's authentication library - in our case MSAL.
-
-![alt text](./images/ad-app-registration.png "AD app registration")
-
-The summary contains the client ID that will be both used in the mobile application and the APIM *validate_jwt* policy.
-
-![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
 
 ### Application
 
