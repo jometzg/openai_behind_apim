@@ -1,0 +1,24 @@
+<policies>
+    <inbound>
+        <base />
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401">
+            <openid-config url="https://login.microsoftonline.com/YOUR_ORGANISATION.onmicrosoft.com/.well-known/openid-configuration" />
+            <audiences>
+                <audience>YOUR_ENTRA_ID_CLIENT_ID</audience>
+            </audiences>
+            <issuers>
+                <issuer>https://sts.windows.net/YOUR_TENANT_ID/</issuer>
+            </issuers>
+        </validate-jwt>
+        <authentication-managed-identity resource="https://cognitiveservices.azure.com" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
