@@ -33,6 +33,7 @@ The summary contains the client ID that will be both used in the mobile applicat
 
 ![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
 
+All of the above is also applicable to Entra ID B2C too.
 
 ### API Management
 
@@ -65,20 +66,36 @@ To protect the API, there is both the APIM key, but we can also use a [JWT valid
     </on-error>
 </policies>
 ```
+In the above *validate-jwt* checks that the issuer and audience are that expected. The issuer is the Entra ID (or B2C) tenant and the audience is the clientid of the app registration from the first step above.
 
+APIM also implcitly tests the content of the JWT token to see if it is signed correctly. There are some circumstances where the application authentication process creates an access token that is not signed correctly or APIM cannot test whether it has been signed correctly. You can use http://jwt.io or https://jwt.ms to test the access token for debugging purposes.
 
 ![alt text](./images/apim-summary.png "APIM Summary")
 
+Managed identity needs to be enabled for APIM to authenticate against other Azure services. Either a system managed identity or user managed identity will work.
 ![alt text](./images/apim-managed-identity.png "APIM Summary")
+
+This identity then gets used in the inbound policy to allow APIM to use the managed identity 
+
+```
+<authentication-managed-identity resource="https://cognitiveservices.azure.com" />
+```
+
+In the above, it is referencing *cognitiveservices.azure.com* - for Azure OpenAI and other Azure cognitive services.
 
 
 ### Azure OpenAI
+In order for the managed identity to be used, Azure OpenAI must have a *role assignment* against the managed identity. This is illustrated below.
 
 ![alt text](./images/openai-role-assignment.png "Role assignment")
 
 
 
 ### Application
+
+The source code for the application is in this repo. It makes a simple chat completions call against Azure OpenAI via APIM.
+
+The configuration in an *.env* file needs to be done to reference the right Entra ID app registration and the APIM-hosted API.
 
 ```
 AZURE_TENANT_ID=YOUR_TENANT_ID
