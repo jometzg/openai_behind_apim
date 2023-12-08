@@ -20,9 +20,19 @@ The mobile application does not contain any secrets - only the *clientid* of an 
 ## Configuration
 ### API Management
 
+![alt text](./images/apim-summary.png "APIM Summary")
+
+![alt text](./images/apim-managed-identity.png "APIM Summary")
+
 ### Azure OpenAI
 
+![alt text](./images/openai-role-assignment.png "Role assignment")
+
 ### Entra ID
+
+![alt text](./images/ad-app-registration.png "AD app registration")
+
+![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
 
 ### Application
 
