@@ -25,7 +25,7 @@ This is the starting point, because this identity is used for:
 1. representing the mobile application (so part of its authentication process)
 2. used by API management to authenticate requests based on the contents of the token presented
    
-In Azure Entra ID, an app registration needs to be created for the mobile application. This follows the [guidance](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest) for configuration for the application's authentication library - in our case MSAL.
+In Azure Entra ID, an app registration needs to be created for the mobile application. This follows the [guidance](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest) for configuration for the application's authentication library - in our case [MSAL](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest).
 
 ![alt text](./images/ad-app-registration.png "AD app registration")
 
@@ -36,10 +36,9 @@ The summary contains the client ID that will be both used in the mobile applicat
 
 ### API Management
 
-![alt text](./images/apim-summary.png "APIM Summary")
+Firstly, the Azure OpenAI REST API [specification[](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) needs to be imported into APIM. You can use the [swagger spec](https://github.com/Azure/azure-rest-api-specs/blob/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2023-09-01-preview/inference.json) to assist in this process.
 
-![alt text](./images/apim-managed-identity.png "APIM Summary")
-
+To protect the API, there is both the APIM key, but we can also use a [JWT validation policy](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad#configure-a-jwt-validation-policy-to-pre-authorize-requests) too.
 ```
 <policies>
     <inbound>
@@ -66,6 +65,12 @@ The summary contains the client ID that will be both used in the mobile applicat
     </on-error>
 </policies>
 ```
+
+
+![alt text](./images/apim-summary.png "APIM Summary")
+
+![alt text](./images/apim-managed-identity.png "APIM Summary")
+
 
 ### Azure OpenAI
 
