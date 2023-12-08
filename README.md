@@ -8,6 +8,7 @@ This repository has a sample python console application which represents a "publ
 
 ## Overall Architecture
 ![alt text](./images/mobile-apim-openai.png "Mobile to OpenAI via APIM")
+
 In the above diagram, there is a mobile application that allows the user to authenticate themselves against Entra ID (Azure AD). This access token is then used to authenticate subsequent HTTP requests to Azure OpenAI.
 
 Azure API Management (APIM) then exposes an API to Azure OpenAI. APIM has a managed identity which is used to authenticate against the Azure OpenAI instance. In addition to that, an APIM policy has been configured which checks that JWT token presented by the call from the mobile application has the correct scope and audience, before allowing the request to be further processed.
