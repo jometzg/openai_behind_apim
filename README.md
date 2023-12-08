@@ -24,15 +24,57 @@ The mobile application does not contain any secrets - only the *clientid* of an 
 
 ![alt text](./images/apim-managed-identity.png "APIM Summary")
 
+```
+<policies>
+    <inbound>
+        <base />
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401">
+            <openid-config url="https://login.microsoftonline.com/YOUR_ORGANISATION.onmicrosoft.com/.well-known/openid-configuration" />
+            <audiences>
+                <audience>YOUR_ENTRA_ID_CLIENT_ID</audience>
+            </audiences>
+            <issuers>
+                <issuer>https://sts.windows.net/YOUR_TENANT_ID/</issuer>
+            </issuers>
+        </validate-jwt>
+        <authentication-managed-identity resource="https://cognitiveservices.azure.com" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+```
+
 ### Azure OpenAI
 
 ![alt text](./images/openai-role-assignment.png "Role assignment")
 
 ### Entra ID
 
+In Azure Entra ID, an app registration needs to be created for the mobile application. This follows the [guidance](https://learn.microsoft.com/en-us/entra/msal/python/?view=msal-py-latest) for configuration for the application's authentication library - in our case MSAL.
+
 ![alt text](./images/ad-app-registration.png "AD app registration")
+
+The summary contains the client ID that will be both used in the mobile application and the APIM *validate_jwt* policy.
 
 ![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
 
 ### Application
+
+```
+AZURE_TENANT_ID=YOUR_TENANT_ID
+AZURE_CLIENT_ID=YOUR_CLIENT_ID
+AZURE_SCOPE_GRAPH=https://graph.microsoft.com/.default
+AZURE_SCOPE=YOUR_CLIENT_ID/.default
+AZURE_AUTHORITY=https://login.microsoftonline.com/YOUR_TENANT_ID
+APIM_SUBSCRIPTION_KEY=YOUR_APIM_KEY
+OPEN_AI_COMPLETION_ENDPOINT=https://YOUR_APIM_NAME.azure-api.net/deployments/YOUR_GPT_DEPLOYMENT/chat/completions?api-version=2023-09-01-preview
+```
+
 
