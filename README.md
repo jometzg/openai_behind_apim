@@ -83,6 +83,8 @@ This identity then gets used in the inbound policy to allow APIM to use the mana
 
 In the above, it is referencing *cognitiveservices.azure.com* - for Azure OpenAI and other Azure cognitive services.
 
+For more global implementations of this architecture, [regional deployments](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-deploy-multi-region) of API Manangement Premium may be used. As all regions share the same meta-data, you will need to use a [context variable](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-deploy-multi-region#-route-api-calls-to-regional-backend-services) to route requests to the local region's Azure OpenAI instance.
+
 
 ### Azure OpenAI
 In order for the managed identity to be used, Azure OpenAI must have a *role assignment* against the managed identity. This is illustrated below.
@@ -95,7 +97,7 @@ In order for the managed identity to be used, Azure OpenAI must have a *role ass
 
 The source code for the application is in this repo. It makes a simple chat completions call against Azure OpenAI via APIM.
 
-The configuration in an *.env* file needs to be done to reference the right Entra ID app registration and the APIM-hosted API.
+The configuration in an *.env* file needs to be amended to reference the right Entra ID app registration and the APIM-hosted API. See below
 
 ```
 AZURE_TENANT_ID=YOUR_TENANT_ID
@@ -107,4 +109,12 @@ APIM_SUBSCRIPTION_KEY=YOUR_APIM_KEY
 OPEN_AI_COMPLETION_ENDPOINT=https://YOUR_APIM_NAME.azure-api.net/deployments/YOUR_GPT_DEPLOYMENT/chat/completions?api-version=2023-09-01-preview
 ```
 
+The application is very simple, and has debugging code to allow the testing of the JWT token, in case of issues.
 
+API Management has an API test facility. The access token from the python console app may be *borrowed* to test the API independent of the python application.
+
+# Summary
+
+API Management, together with the use of EntraID may be used to allow mobile or public clients to use OpenAI without exposing the keys to OpenAI. The use of API Management JWT token validation can also be used to ensure that only authenticated users can use the API - either with or without API Management API keys. There are potentially other ways to authenticate users against API Management, but this is relatively simple.
+
+Through the use of API Management Premium, a full multi-region implementation can then be built, where a global API Management endpoint can direct the user to *local to the user* instances of API Management and Azure OpenAI for full global reach.
