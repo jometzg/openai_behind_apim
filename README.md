@@ -33,7 +33,7 @@ The summary contains the client ID that will be both used in the mobile applicat
 
 ![alt text](./images/ad-app-registration-summary.png "AD app registration summary")
 
-All of the above is also applicable to Entra ID B2C too.
+All of the above is also applicable to Entra ID B2C too. As B2C is a separate tenant, this would require a different tenant ID and an app registration inside the B2C tenant.
 
 ### API Management
 
