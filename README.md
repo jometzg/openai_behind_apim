@@ -1,4 +1,4 @@
-# Azure OpenAI behind API Management Sample
+# Azure OpenAI behind API Management for Mobile Apps
 This is a sample python console application that calls Azure OpenAI chat completion, but behind Azure APIM Management
 
 ## Why would I want to do this?
