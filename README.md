@@ -120,9 +120,11 @@ ToDo
 
 API Management, together with the use of EntraID may be used to allow mobile or public clients to use OpenAI without exposing the keys to OpenAI. The use of API Management JWT token validation can also be used to ensure that only authenticated users can use the API - either with or without API Management API keys. There are potentially other ways to authenticate users against API Management, but this is relatively simple.
 
+Through the use of API Management Premium, a full multi-region implementation can then be built, where a global API Management endpoint can direct the user to *local to the user* instances of API Management and Azure OpenAI for full global reach.
+
 ## Other Thoughts
 
-One useful capbility that has not been explored is the use of a rate limit policy. This may or may not be useful to protect the downstream OpenAI instance. Needs more research as Azure OpenAI itself will return HTTP 429s if the tokens per minute limit is exceeded within the one minute window. [Quaota and limikts](https://learn.microsoft.com/en-us/azure/ai-services/openai/quotas-limits#quotas-and-limits-reference)
+One useful capbility that has not been explored is the use of a rate limit policy. This may or may not be useful to protect the downstream OpenAI instance. Needs more research as Azure OpenAI itself will return HTTP 429s if the tokens per minute limit is exceeded within the one minute window. [Quota and Limits](https://learn.microsoft.com/en-us/azure/ai-services/openai/quotas-limits#quotas-and-limits-reference)
 
 
-Through the use of API Management Premium, a full multi-region implementation can then be built, where a global API Management endpoint can direct the user to *local to the user* instances of API Management and Azure OpenAI for full global reach.
+
