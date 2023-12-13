@@ -1,0 +1,73 @@
+### this is a demo on how to use an APIM managed identity to access an API behind APIM
+### first I get an access token that will be equivalent to one from a user logon
+
+
+### get access token using a service principal
+# @name getaccesstoken
+POST https://login.microsoftonline.com/{{apptenantid}}/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{appclientid}}&client_secret={{appclientsecret}}&resource={{appaudience}}
+
+
+### get access token using a user logon
+# @name getaccesstokenuser
+POST https://login.microsoftonline.com/{{apptenantid}}/oauth2/devicecode
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{appclientid}}&scope=user.read%20openid%20profile
+
+### poll this endpoint until the user has logged on
+POST https://login.microsoftonline.com/{{apptenantid}}/oauth2/v2.0/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=urn:ietf:params:oauth:grant-type:device_code&client_id={{appclientid}}&device_code={{getaccesstokenuser.response.body.device_code}}
+
+
+### consent 
+### this is only needed once - and needs to be done in a browser
+https://login.microsoftonline.com/{{apptenantid}}/adminconsent?client_id={{appclientid}}
+
+
+### ROCP flow - note this only works if the scope is the app id (otherwise it will fail as it prroduces a JWT token that cannot be validated by APIM)
+# @name getaccesstokenropcuser
+POST https://login.microsoftonline.com/{{apptenantid}}/oauth2/v2.0/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{appclientid}}
+&client_secret={{appclientsecret}}
+&scope={{appclientid}}/.default
+&username={{ususer}}
+&password={{uspassword}}
+&grant_type=password
+
+
+
+### send request to echo behind API Management
+### the access token is passed to APIM so that it can validate the JWT token
+GET https://{{apimname}}.azure-api.net/echo/resource?param1=sample
+Authorization: Bearer {{getaccesstokenropcuser.response.body.access_token}}
+Ocp-Apim-Subscription-Key: {{apimkey}}
+Ocp-Apim-Trace: true
+
+
+### send request to OpenAI behind API Management (OpenAI uses the APIM managed identity)
+### this also validates the JWT token, but does not use this to authenticate to OpenAI
+### instead it uses the APIM managed identity to authenticate to OpenAI
+POST https://{{apimname}}.azure-api.net/deployments/{{openaichatmodel}}/chat/completions?api-version=2023-09-01-preview
+Content-Type: application/json
+Authorization: Bearer {{getaccesstokenropcuser.response.body.access_token}}
+Ocp-Apim-Subscription-Key: {{apimkey}}
+
+{ 
+    "messages": [
+        {
+            "role": "system",
+            "content": "you are a helpful AI assistant that helps car purchasing tasks"            
+        },
+        {
+            "role": "user",
+            "content": "what is a PCP?"            
+        }
+    ]
+}
