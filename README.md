@@ -114,7 +114,12 @@ The application is very simple, and has debugging code to allow the testing of t
 API Management has an API test facility. The access token from the python console app may be *borrowed* to test the API independent of the python application.
 
 ## Troubleshooting
-ToDo
+
+There are a few approaches to troubleshooting:
+1. Use the VS Code Python debugger to single step throught the application code
+2. Use the *Test* capability in APIM to construct a request with an access token taken from the Python app. This requires the manual adding of an *Authorization" header with the bearer token borrowed from the application.
+3. As part of the above, the APIM trace capability should be turned on in the portal and then the trace inspected on each part of the request. This allows you to see where there may be problems.
+4. Included in this repo is also a VS Code REST client request [apim-openai-identity.http](./apim-openai-identity.http) which may be used to drive requests against APIM without need to use the application
 
 # Summary
 
